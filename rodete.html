@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title>Rodete</title>
+  </head>
+  <style >
+    button:hover{
+      color: lightblue;
+      background-color: darkgreen;
+    }
+    td {
+      color: white;
+      background-color:  grey;
+      height: 50px;
+      width: 50px;
+      border: 2px solid black;
+
+    }
+    .jogo{
+    background-color: darkred;
+    position: absolute;
+    bottom: inherit;
+    border: 2px solid darkred;
+    }
+  </style>
+  <script>
+    var deque = [];
+    class Carta {
+      constructor(numero, naipe) {
+        this.numero = numero;
+        this.naipe = naipe;
+        this.nome = numero + naipe;
+      }
+    }
+    var cartas = [];
+    function criarCartas(array) {
+      for (i = 0; i < 52; i++) {
+        if (i < 13) {
+          array[i] = new Carta(i + 1, " de copas");
+        }
+        else if (i < 26) {
+          array[i] = new Carta(i - 12, " de espadas");
+        }
+        else if (i < 39) {
+          array[i] = new Carta(i - 25, " de ouros");
+        }
+        else {
+          array[i] = new Carta(i - 38, " de paus");
+        }
+      }
+      array[52] = new Carta("joker", " preto");
+      array[53] = new Carta("joker", " branco");
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].numero == 1) {
+          array[i].numero = "A";
+          array[i].nome = array[i].numero + array[i].naipe;
+        }
+        if(array[i].numero == 11){
+          array[i].numero = "J";
+          array[i].nome = array[i].numero + array[i].naipe;
+        }
+        if(array[i].numero == 12){
+          array[i].numero = "Q";
+          array[i].nome = array[i].numero + array[i].naipe;
+        }
+        if(array[i].numero == 13){
+          array[i].numero = "K";
+          array[i].nome = array[i].numero + array[i].naipe;
+        }
+      }
+    }
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+      }
+    function distribuir() {
+      if(deque[8] == null) {
+        for (var i = 0; i < 9; i++) {
+          deque[i] = cartas[0]
+          cartas.splice(0,1);
+        }
+      }
+    }
+    $(document).ready(function(){
+      var nappends = 0;
+      $("body").append("<div class='jogo'><table class='mao'></table></div>");
+      $(".jogo").hide();
+      $(".mcartas").click(function(){
+        for (var i = 0; i < deque.length; i++) {
+          if (nappends == 9) {
+            break;
+          }
+          $(".mao").append("<td class='deque'>" + deque[i].nome + "</td>");
+          nappends += 1;
+        }
+        $(".jogo").slideToggle();
+      });
+    });
+    function comprar() {
+      deque.push(cartas[0]);
+      cartas.splice(0, 1);
+      $(".mao").append("<td class='deque'>" + deque[deque.length - 1].nome + "</td>");
+    }
+  </script>
+  <body>
+    <button type="button" onclick="criarCartas(cartas)">criar cartas</button>
+    <button type="button" onclick="shuffle(cartas)">embaralhar</button>
+    <button type="button" onclick="distribuir()">receber cartas</button>
+    <button type="button" class="mcartas">ver cartas</button>
+    <button type="button" onclick="comprar()">comprar cartas</button>
+  </body>
+</html>
