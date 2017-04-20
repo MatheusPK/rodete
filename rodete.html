@@ -98,7 +98,7 @@
           if (nappends == 9) {
             break;
           }
-          $(".mao").append("<td class='deque'>" + deque[i].nome + "</td>");
+          $(".mao").append("<td class='deque' onclick='getIndex(this)'>" + deque[i].nome + "</td>");
           nappends += 1;
         }
         $(".jogo").slideToggle();
@@ -107,8 +107,11 @@
     function comprar() {
       deque.push(cartas[0]);
       cartas.splice(0, 1);
-      $(".mao").append("<td class='deque'>" + deque[deque.length - 1].nome + "</td>");
+      $(".mao").append("<td class='deque' onclick='getIndex(this)'>" + deque[deque.length - 1].nome + "</td>");
     }
+    function getIndex(elemento) {
+     console.log($(elemento).index());
+   }
   </script>
   <body>
     <button type="button" onclick="criarCartas(cartas)">criar cartas</button>
