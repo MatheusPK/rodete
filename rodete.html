@@ -6,6 +6,18 @@
     <title>Rodete</title>
   </head>
   <style >
+    .bolo{
+      color: white;
+      background-color:  grey;
+      border: 2px solid black;
+      width: 150px;
+      height: 150px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -75px;
+      margin-left: -75px;
+    }
     button:hover{
       color: lightblue;
       background-color: darkgreen;
@@ -16,7 +28,6 @@
       height: 50px;
       width: 50px;
       border: 2px solid black;
-
     }
     .jogo{
     background-color: darkred;
@@ -27,6 +38,10 @@
   </style>
   <script>
     var deque = [];
+    var cartas = [];
+    var bolo = [];
+    var cartaRemovida;
+    var iAtual;
     class Carta {
       constructor(numero, naipe) {
         this.numero = numero;
@@ -34,7 +49,6 @@
         this.nome = numero + naipe;
       }
     }
-    var cartas = [];
     function criarCartas(array) {
       for (i = 0; i < 52; i++) {
         if (i < 13) {
@@ -80,12 +94,15 @@
           array[currentIndex] = array[randomIndex];
           array[randomIndex] = temporaryValue;
         }
+        bolo[0] = cartas[0];
+        cartas.splice(0, 1);
+        $(".bolo").append(bolo[0].nome);
       }
     function distribuir() {
       if(deque[8] == null) {
         for (var i = 0; i < 9; i++) {
           deque[i] = cartas[0]
-          cartas.splice(0,1);
+          cartas.splice(0, 1);
         }
       }
     }
@@ -110,8 +127,19 @@
       $(".mao").append("<td class='deque' onclick='getIndex(this)'>" + deque[deque.length - 1].nome + "</td>");
     }
     function getIndex(elemento) {
-     console.log($(elemento).index());
+      iAtual = $(elemento).index();
+      cartaRemovida = elemento;
    }
+    function jogar() {
+      alert("selecione uma carta para jogar");
+      if (deque[iAtual].naipe == bolo[0].naipe || deque[iAtual].numero == bolo[0].numero) {
+      cartas.push(bolo[0]);
+      bolo[0] = deque[iAtual];
+      $(".bolo").text(bolo[0].nome);
+      deque.splice(iAtual, 1);
+      $(cartaRemovida).remove();
+      }
+    }
   </script>
   <body>
     <button type="button" onclick="criarCartas(cartas)">criar cartas</button>
@@ -119,5 +147,7 @@
     <button type="button" onclick="distribuir()">receber cartas</button>
     <button type="button" class="mcartas">ver cartas</button>
     <button type="button" onclick="comprar()">comprar cartas</button>
+    <div class="bolo">
+    </div>
   </body>
 </html>
