@@ -6,7 +6,7 @@
     <title>Rodete</title>
   </head>
   <style >
-    .bolo{
+    .bolo {
       color: white;
       background-color:  grey;
       border: 2px solid black;
@@ -18,7 +18,7 @@
       margin-top: -75px;
       margin-left: -75px;
     }
-    button:hover{
+    button:hover {
       color: lightblue;
       background-color: darkgreen;
     }
@@ -29,7 +29,7 @@
       width: 50px;
       border: 2px solid black;
     }
-    .jogo{
+    .jogo {
     background-color: darkred;
     position: absolute;
     bottom: inherit;
@@ -46,22 +46,22 @@
       constructor(numero, naipe) {
         this.numero = numero;
         this.naipe = naipe;
-        this.nome = numero + naipe;
+        this.nome = numero + " de " + naipe;
       }
     }
     function criarCartas(array) {
       for (i = 0; i < 52; i++) {
         if (i < 13) {
-          array[i] = new Carta(i + 1, " de copas");
+          array[i] = new Carta(i + 1, "copas");
         }
         else if (i < 26) {
-          array[i] = new Carta(i - 12, " de espadas");
+          array[i] = new Carta(i - 12, "espadas");
         }
         else if (i < 39) {
-          array[i] = new Carta(i - 25, " de ouros");
+          array[i] = new Carta(i - 25, "ouros");
         }
         else {
-          array[i] = new Carta(i - 38, " de paus");
+          array[i] = new Carta(i - 38, "paus");
         }
       }
       array[52] = new Carta("joker", " preto");
@@ -69,19 +69,19 @@
       for (var i = 0; i < array.length; i++) {
         if (array[i].numero == 1) {
           array[i].numero = "A";
-          array[i].nome = array[i].numero + array[i].naipe;
+          array[i].nome = array[i].numero + " de " + array[i].naipe;
         }
         if(array[i].numero == 11){
           array[i].numero = "J";
-          array[i].nome = array[i].numero + array[i].naipe;
+          array[i].nome = array[i].numero + " de " + array[i].naipe;
         }
         if(array[i].numero == 12){
           array[i].numero = "Q";
-          array[i].nome = array[i].numero + array[i].naipe;
+          array[i].nome = array[i].numero + " de " + array[i].naipe;
         }
         if(array[i].numero == 13){
           array[i].numero = "K";
-          array[i].nome = array[i].numero + array[i].naipe;
+          array[i].nome = array[i].numero + " de " + array[i].naipe;
         }
       }
     }
@@ -115,7 +115,7 @@
           if (nappends == 9) {
             break;
           }
-          $(".mao").append("<td class='deque' onclick='getIndex(this)'>" + deque[i].nome + "</td>");
+          $(".mao").append("<td class='deque' onclick='jogar(this)'>" + deque[i].nome + "</td>");
           nappends += 1;
         }
         $(".jogo").slideToggle();
@@ -124,27 +124,45 @@
     function comprar() {
       deque.push(cartas[0]);
       cartas.splice(0, 1);
-      $(".mao").append("<td class='deque' onclick='getIndex(this)'>" + deque[deque.length - 1].nome + "</td>");
+      $(".mao").append("<td class='deque' onclick='jogar(this)' >" + deque[deque.length - 1].nome + "</td>");
     }
-    function getIndex(elemento) {
+    function jogar(elemento) {
       iAtual = $(elemento).index();
       cartaRemovida = elemento;
-   }
-    function jogar() {
-      alert("selecione uma carta para jogar");
-      if (deque[iAtual].naipe == bolo[0].naipe || deque[iAtual].numero == bolo[0].numero) {
-      cartas.push(bolo[0]);
-      bolo[0] = deque[iAtual];
-      $(".bolo").text(bolo[0].nome);
-      deque.splice(iAtual, 1);
-      $(cartaRemovida).remove();
+      if (deque[iAtual].numero == 10 || deque[iAtual].numero == "joker") {
+        cartas.push(bolo[0]);
+        bolo[0] = deque[iAtual];
+        bolo[0].naipe = prompt("qual naipe vc quer?");
+        $(".bolo").text(bolo[0].naipe);
+        if (deque[iAtual].numero == "joker") {
+          for (var i = 0; i < 4; i++) {
+            comprar();
+          }
+        }
+        deque.splice(iAtual, 1);
+        $(cartaRemovida).remove();
       }
+      else if (deque[iAtual].naipe == bolo[0].naipe || deque[iAtual].numero == bolo[0].numero) {
+        cartas.push(bolo[0]);
+        bolo[0] = deque[iAtual];
+        $(".bolo").text(bolo[0].nome);
+        deque.splice(iAtual, 1);
+        $(cartaRemovida).remove();
+      }
+      else {
+        alert("escolha outra carta ou compre uma")
+      }
+   }
+    function start() {
+      $(".start").remove();
+      criarCartas(cartas);
+      shuffle(cartas);
+      distribuir();
+      alert("selecione uma carta para jogar");
     }
   </script>
   <body>
-    <button type="button" onclick="criarCartas(cartas)">criar cartas</button>
-    <button type="button" onclick="shuffle(cartas)">embaralhar</button>
-    <button type="button" onclick="distribuir()">receber cartas</button>
+    <button type="button" onclick="start()" class="start">começar o jogo</button>
     <button type="button" class="mcartas">ver cartas</button>
     <button type="button" onclick="comprar()">comprar cartas</button>
     <div class="bolo">
